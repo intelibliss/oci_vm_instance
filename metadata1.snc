@@ -2,7 +2,7 @@
   "Metadata": {
     "SNC::Parameter::Metadata": {
       "instance_shape": {
-        "datasource": "ServiceNow::Pools::ComputeProfilePool.ib_oci_getShapes"
+        "datasource": "ServiceNow::Pools::ResourceGroupPool.getByLDC"
       }
     }
   }
