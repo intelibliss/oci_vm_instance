@@ -5,7 +5,7 @@ variable "tenancy_ocid" {
 }
 
 variable "instance_prefix" {
-   default = "CPG-OCI-"
+   default = "cpg-oci-"
 }
 
 variable "user_ocid" {
