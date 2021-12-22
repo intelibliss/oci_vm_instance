@@ -336,3 +336,14 @@ data "oci_identity_availability_domain" "ad" {
   compartment_id = var.tenancy_ocid
   ad_number      = 1
 }
+
+
+{
+  "Metadata": {
+    "SNC::Parameter::Metadata": {
+      "instance_shape": {
+        "datasource": "ServiceNow::Pools:: ComputeProfilePool.ib_oci_getShapes"
+      }
+    }
+  }
+}
