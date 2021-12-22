@@ -69,8 +69,6 @@ variable "instance_image_ocid" {
   type = map(string)
 
   default = {
-    # See https://docs.us-phoenix-1.oraclecloud.com/images/
-    # Oracle-provided image "Oracle-Linux-7.5-2018.10.16-0"
     us-phoenix-1   = "ocid1.image.oc1.phx.aaaaaaaaoqj42sokaoh42l76wsyhn3k2beuntrh5maj3gmgmzeyr55zzrwwa"
     us-ashburn-1   = "ocid1.image.oc1.iad.aaaaaaaageeenzyuxgia726xur4ztaoxbxyjlxogdhreu3ngfj2gji3bayda"
     eu-frankfurt-1 = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaaitzn6tdyjer7jl34h2ujz74jwy5nkbukbh55ekp6oyzwrtfa4zma"
@@ -139,7 +137,7 @@ resource "oci_core_instance" "test_instance" {
     user_data           = base64encode(file("./userdata/bootstrap"))
   }
   defined_tags = {
-    "${oci_identity_tag_namespace.tag-namespace1.name}.${oci_identity_tag.tag2.name}" = "awesome-app-server"
+    #"${oci_identity_tag_namespace.tag-namespace1.name}.${oci_identity_tag.tag2.name}" = "awesome-app-server"
   }
 
   freeform_tags = {
