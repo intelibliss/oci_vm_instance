@@ -4,6 +4,9 @@
 variable "tenancy_ocid" {
 }
 
+variable "instance_prefix" {
+}
+
 variable "user_ocid" {
 }
 
@@ -100,7 +103,7 @@ resource "oci_core_instance" "test_instance" {
   count               = var.num_instances
   availability_domain = data.oci_identity_availability_domain.ad.name
   compartment_id      = var.compartment_ocid
-  display_name        = "TestInstance${count.index}"
+  display_name        = var.instance_prefix[count.index]
   shape               = var.instance_shape
 
   shape_config {
@@ -335,15 +338,4 @@ resource "oci_core_subnet" "test_subnet" {
 data "oci_identity_availability_domain" "ad" {
   compartment_id = var.tenancy_ocid
   ad_number      = 1
-}
-
-
-{
-  "Metadata": {
-    "SNC::Parameter::Metadata": {
-      "instance_shape": {
-        "datasource": "ServiceNow::Pools:: ComputeProfilePool.ib_oci_getShapes"
-      }
-    }
-  }
 }
