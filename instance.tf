@@ -99,7 +99,7 @@ variable "tag_namespace_name" {
 }
 
 resource "oci_core_instance" "test_instance" {
-  count               = var.num_instances
+  count               = length(var.num_instances)
   availability_domain = data.oci_identity_availability_domain.ad.name
   compartment_id      = var.compartment_ocid
   display_name        = var.instance_prefix[count.index]
