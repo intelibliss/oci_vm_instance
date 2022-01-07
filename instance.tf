@@ -98,6 +98,14 @@ variable "tag_namespace_name" {
   default = "testexamples-tag-namespace"
 }
 
+variable "freeform_tags" {
+  type = map(string)
+
+  default = {
+    "SampleTagName" = "SampleTagValue"
+  }
+}
+
 resource "oci_core_instance" "test_instance" {
   count               = var.num_instances
   availability_domain = data.oci_identity_availability_domain.ad.name
@@ -141,7 +149,7 @@ resource "oci_core_instance" "test_instance" {
   }
 
   freeform_tags = {
-    "freeformkey${count.index}" = "freeformvalue${count.index}"
+    var.freeform_tags
   }
 
   preemptible_instance_config {
@@ -164,6 +172,11 @@ resource "oci_core_volume" "test_block_volume" {
   compartment_id      = var.compartment_ocid
   display_name        = "TestBlock${count.index}"
   size_in_gbs         = var.db_size
+
+
+   freeform_tags = {
+    var.freeform_tags
+  }
 }
 
 resource "oci_core_volume_attachment" "test_block_attach" {
@@ -178,6 +191,11 @@ resource "oci_core_volume_attachment" "test_block_attach" {
   use_chap = true
   # Set this to attach the volume as read-only.
   #is_read_only = true
+
+
+   freeform_tags = {
+    var.freeform_tags
+  }
 }
 
 resource "oci_core_volume" "test_block_volume_paravirtualized" {
@@ -186,6 +204,11 @@ resource "oci_core_volume" "test_block_volume_paravirtualized" {
   compartment_id      = var.compartment_ocid
   display_name        = "TestBlockParavirtualized${count.index}"
   size_in_gbs         = var.db_size
+
+
+   freeform_tags = {
+    var.freeform_tags
+  }
 }
 
 resource "oci_core_volume_attachment" "test_block_volume_attach_paravirtualized" {
@@ -195,12 +218,21 @@ resource "oci_core_volume_attachment" "test_block_volume_attach_paravirtualized"
   volume_id       = oci_core_volume.test_block_volume_paravirtualized[count.index].id
   # Set this to attach the volume as read-only.
   #is_read_only = true
+
+   freeform_tags = {
+    var.freeform_tags
+  }
 }
 
 resource "oci_core_volume_backup_policy_assignment" "policy" {
   count     = var.num_instances
   asset_id  = oci_core_instance.test_instance[count.index].boot_volume_id
   policy_id = data.oci_core_volume_backup_policies.test_predefined_volume_backup_policies.volume_backup_policies[0].id
+
+ freeform_tags = {
+    var.freeform_tags
+  }
+
 }
 
 resource "null_resource" "remote-exec" {
@@ -303,12 +335,22 @@ resource "oci_core_vcn" "test_vcn" {
   compartment_id = var.compartment_ocid
   display_name   = "TestVcn"
   dns_label      = "testvcn"
+
+ freeform_tags = {
+    var.freeform_tags
+  }
+
 }
 
 resource "oci_core_internet_gateway" "test_internet_gateway" {
   compartment_id = var.compartment_ocid
   display_name   = "TestInternetGateway"
   vcn_id         = oci_core_vcn.test_vcn.id
+
+ freeform_tags = {
+    var.freeform_tags
+  }
+
 }
 
 resource "oci_core_default_route_table" "default_route_table" {
@@ -319,6 +361,11 @@ resource "oci_core_default_route_table" "default_route_table" {
     destination       = "0.0.0.0/0"
     destination_type  = "CIDR_BLOCK"
     network_entity_id = oci_core_internet_gateway.test_internet_gateway.id
+  }
+
+
+   freeform_tags = {
+    var.freeform_tags
   }
 }
 
@@ -332,6 +379,11 @@ resource "oci_core_subnet" "test_subnet" {
   vcn_id              = oci_core_vcn.test_vcn.id
   route_table_id      = oci_core_vcn.test_vcn.default_route_table_id
   dhcp_options_id     = oci_core_vcn.test_vcn.default_dhcp_options_id
+
+ freeform_tags = {
+    var.freeform_tags
+  }
+  
 }
 
 data "oci_identity_availability_domain" "ad" {
