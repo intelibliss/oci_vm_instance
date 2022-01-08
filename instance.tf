@@ -102,7 +102,7 @@ variable "freeform_tags" {
   type = map(string)
 
   default = {
-    "SampleTagName" = "SampleTagValue"
+    SampleTagName = "SampleTagValue"
   }
 }
 
