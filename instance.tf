@@ -186,7 +186,6 @@ resource "oci_core_volume_attachment" "test_block_attach" {
   use_chap = true
   # Set this to attach the volume as read-only.
   #is_read_only = true
-  freeform_tags   = var.freeform_tags  
 }
 
 resource "oci_core_volume" "test_block_volume_paravirtualized" {
@@ -206,15 +205,12 @@ resource "oci_core_volume_attachment" "test_block_volume_attach_paravirtualized"
   volume_id       = oci_core_volume.test_block_volume_paravirtualized[count.index].id
   # Set this to attach the volume as read-only.
   #is_read_only = true
-  freeform_tags       = var.freeform_tags    
-
 }
 
 resource "oci_core_volume_backup_policy_assignment" "policy" {
   count     = var.num_instances
   asset_id  = oci_core_instance.test_instance[count.index].boot_volume_id
   policy_id = data.oci_core_volume_backup_policies.test_predefined_volume_backup_policies.volume_backup_policies[0].id
-  freeform_tags       = var.freeform_tags    
 
 }
 
