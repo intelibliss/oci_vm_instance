@@ -94,18 +94,9 @@ variable "tag_namespace_description" {
   default = "Just a test"
 }
 
-variable "freeform_tags" {
-  type = map(string)
-  default = {
-    SampleTagName = "SampleTagValue"
-  }
-}
-
 variable "tag_namespace_name" {
   default = "testexamples-tag-namespace"
 }
-
-
 
 resource "oci_core_instance" "test_instance" {
   count               = var.num_instances
@@ -149,8 +140,9 @@ resource "oci_core_instance" "test_instance" {
     #"${oci_identity_tag_namespace.tag-namespace1.name}.${oci_identity_tag.tag2.name}" = "awesome-app-server"
   }
 
-  freeform_tags = var.freeform_tags
-  
+  freeform_tags = {
+    "freeformkey${count.index}" = "freeformvalue${count.index}"
+  }
 
   preemptible_instance_config {
     preemption_action {
@@ -172,7 +164,6 @@ resource "oci_core_volume" "test_block_volume" {
   compartment_id      = var.compartment_ocid
   display_name        = "TestBlock${count.index}"
   size_in_gbs         = var.db_size
-  freeform_tags       = var.freeform_tags 
 }
 
 resource "oci_core_volume_attachment" "test_block_attach" {
@@ -195,8 +186,6 @@ resource "oci_core_volume" "test_block_volume_paravirtualized" {
   compartment_id      = var.compartment_ocid
   display_name        = "TestBlockParavirtualized${count.index}"
   size_in_gbs         = var.db_size
-  freeform_tags       = var.freeform_tags    
-
 }
 
 resource "oci_core_volume_attachment" "test_block_volume_attach_paravirtualized" {
@@ -212,7 +201,6 @@ resource "oci_core_volume_backup_policy_assignment" "policy" {
   count     = var.num_instances
   asset_id  = oci_core_instance.test_instance[count.index].boot_volume_id
   policy_id = data.oci_core_volume_backup_policies.test_predefined_volume_backup_policies.volume_backup_policies[0].id
-
 }
 
 resource "null_resource" "remote-exec" {
@@ -315,15 +303,12 @@ resource "oci_core_vcn" "test_vcn" {
   compartment_id = var.compartment_ocid
   display_name   = "TestVcn"
   dns_label      = "testvcn"
-  freeform_tags       = var.freeform_tags    
 }
 
 resource "oci_core_internet_gateway" "test_internet_gateway" {
   compartment_id = var.compartment_ocid
   display_name   = "TestInternetGateway"
   vcn_id         = oci_core_vcn.test_vcn.id
-  freeform_tags       = var.freeform_tags    
-
 }
 
 resource "oci_core_default_route_table" "default_route_table" {
@@ -335,7 +320,6 @@ resource "oci_core_default_route_table" "default_route_table" {
     destination_type  = "CIDR_BLOCK"
     network_entity_id = oci_core_internet_gateway.test_internet_gateway.id
   }
-  freeform_tags       = var.freeform_tags   
 }
 
 resource "oci_core_subnet" "test_subnet" {
@@ -347,8 +331,7 @@ resource "oci_core_subnet" "test_subnet" {
   compartment_id      = var.compartment_ocid
   vcn_id              = oci_core_vcn.test_vcn.id
   route_table_id      = oci_core_vcn.test_vcn.default_route_table_id
-  dhcp_options_id     = oci_core_vcn.test_vcn.default_dhcp_options_id 
-  freeform_tags       = var.freeform_tags    
+  dhcp_options_id     = oci_core_vcn.test_vcn.default_dhcp_options_id
 }
 
 data "oci_identity_availability_domain" "ad" {
