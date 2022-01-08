@@ -99,7 +99,7 @@ variable "tag_namespace_name" {
 }
 
 variable "freeform_tags" {
-  type = map(string)
+  type = map(any)
 
   default = {
     SampleTagName = "SampleTagValue"
