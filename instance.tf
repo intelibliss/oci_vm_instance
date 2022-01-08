@@ -94,17 +94,18 @@ variable "tag_namespace_description" {
   default = "Just a test"
 }
 
-variable "tag_namespace_name" {
-  default = "testexamples-tag-namespace"
-}
-
 variable "freeform_tags" {
-  type = map(any)
-
+  type = map(string)
   default = {
     SampleTagName = "SampleTagValue"
   }
 }
+
+variable "tag_namespace_name" {
+  default = "testexamples-tag-namespace"
+}
+
+
 
 resource "oci_core_instance" "test_instance" {
   count               = var.num_instances
